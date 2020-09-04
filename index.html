@@ -6,13 +6,30 @@
 	</head>
 	<body onload="init()">
 		<div id="app">
-			<input type="radio" value="sine" v-model="wave">Sine
-			<input type="radio" value="square" v-model="wave">Square
-			<input type="radio" value="sawtooth" v-model="wave">Sawtooth
-			<input type="radio" value="triangle" v-model="wave">Triangle
-			<input type="radio" value="noise" v-model="wave">Noise
-			<br>
-			<input type="range" min="0" max="1000" v-model="gain">
+			<main style="display: flex">
+			<div class="box">
+				<span>Wave 1</span>
+				<br>
+				<input type="radio" value="sine" v-model="mainWave">Sine
+				<input type="radio" value="square" v-model="mainWave">Square
+				<input type="radio" value="sawtooth" v-model="mainWave">Sawtooth
+				<input type="radio" value="triangle" v-model="mainWave">Triangle
+				<br>
+				<span>Volume</span><input type="range" min="0" max="1000" v-model="mainGain">
+				<span>Detune</span><input type="range" min="-100" max="100" v-model="mainDetune">
+			</div>
+			<div class="box">
+				<span>Wave 2</span>
+				<br>
+				<input type="radio" value="sine" v-model="subWave">Sine
+				<input type="radio" value="square" v-model="subWave">Square
+				<input type="radio" value="sawtooth" v-model="subWave">Sawtooth
+				<input type="radio" value="triangle" v-model="subWave">Triangle
+				<br>
+				<span>Volume</span><input type="range" min="0" max="1000" v-model="subGain">
+				<span>Detune</span><input type="range" min="-100" max="100" v-model="subDetune">
+			</div>
+			</main>
 			<ul class="set">
 				<li class="white c" v-on:click="keyPlay(72)"></li>
 				<li class="black cs" v-on:click="keyPlay(73)"></li>

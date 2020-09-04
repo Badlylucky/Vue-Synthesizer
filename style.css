@@ -62,3 +62,8 @@ ul {
   ul li:last-child {
 	border-radius:0 5px 5px 5px
   }
+
+.box{
+	border: 2px dotted black;
+}
+  
