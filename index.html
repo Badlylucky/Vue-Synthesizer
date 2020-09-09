@@ -47,21 +47,78 @@
 				<div>
 					<span>Low Pass</span>
 					<br>
-					<span>Cutoff</span><input type="tel" size="1" v-model="LPFCutoff"><input type="range" min="0" max="17000" v-model="LPFCutoff">
+					<span>Cutoff</span><input type="tel" size="1" v-model="LPFCutoff"><input type="range" min="0"
+						max="17000" v-model="LPFCutoff">
 					<br>
-					<span>Emphasis</span><input type="tel" size="1" v-model="LPFEmphasis"><input type="range" min="0" max="100" v-model="LPFEmphasis">
+					<span>Emphasis</span><input type="tel" size="1" v-model="LPFEmphasis"><input type="range" min="0"
+						max="100" v-model="LPFEmphasis">
 				</div>
 				<div>
 					<span>High Pass</span>
 					<br>
-					<span>Cutoff</span><input type="tel" size="1" v-model="HPFCutoff"><input type="range" min="0" max="17000" v-model="HPFCutoff">
+					<span>Cutoff</span><input type="tel" size="1" v-model="HPFCutoff"><input type="range" min="0"
+						max="17000" v-model="HPFCutoff">
 					<br>
-					<span>Emphasis</span><input type="tel" size="1" v-model="HPFEmphasis"><input type="range" min="0" max="100" v-model="HPFEmphasis">
+					<span>Emphasis</span><input type="tel" size="1" v-model="HPFEmphasis"><input type="range" min="0"
+						max="100" v-model="HPFEmphasis">
 				</div>
 			</main>
 		</main>
 		<!--エンベロープ-->
 		<!--LFO-->
+		<main style="display: flex">
+			<div class="box">
+				<span>LFO 1</span>
+				<br>
+				<input type="radio" value="sine" v-model="mainLFOWave">Sine
+				<input type="radio" value="square" v-model="mainLFOWave">Square
+				<input type="radio" value="sawtooth" v-model="mainLFOWave">Sawtooth
+				<input type="radio" value="triangle" v-model="mainLFOWave">Triangle
+				<br>
+				<span>Rate</span><input type="tel" size="1" v-model="mainLFORate"><input type="range" min="0" max="15"
+					v-model="mainLFORate">
+				<span>Depth</span><input type="range" min="0" max="50" v-model="mainLFODepth">
+				<br>
+				<div style="font-size: 60%;">
+					<input type="checkbox" value="mainOscFreq" v-model="mainLFOApply">Freq.(Wave1)
+					<input type="checkbox" value="mainOscVol" v-model="mainLFOApply">Vol.(Wave1)
+					<input type="checkbox" value="subOscFreq" v-model="mainLFOApply">Freq.(Wave2)
+					<input type="checkbox" value="subOscVol" v-model="mainLFOApply">Vol.(Wave2)
+					<br>
+					<input type="checkbox" value="LPFCutoff" v-model="mainLFOApply">Cutoff(LPF)
+					<input type="checkbox" value="LPFEmphasis" v-model="mainLFOApply">Emp.(LPF)
+					<input type="checkbox" value="HPFCutoff" v-model="mainLFOApply">Cutoff(HPF)
+					<input type="checkbox" value="HPFEmphasis" v-model="mainLFOApply">Emp.(HPF)
+				</div>
+			</div>
+			<div class="box">
+				<span>LFO 2</span>
+				<br>
+				<input type="radio" value="sine" v-model="subLFOWave">Sine
+				<input type="radio" value="square" v-model="subLFOWave">Square
+				<input type="radio" value="sawtooth" v-model="subLFOWave">Sawtooth
+				<input type="radio" value="triangle" v-model="subLFOWave">Triangle
+				<br>
+				<span>Rate</span><input type="tel" size="1" v-model="subLFORate"><input type="range" min="0" max="15"
+					v-model="subLFORate">
+				<span>Depth</span><input type="range" min="0" max="50" v-model="subLFODepth">
+				<br>
+				<div style="font-size:60%">
+					<input type="checkbox" value="mainOscFreq" v-model="subLFOApply">Freq.(Wave1)
+					<input type="checkbox" value="mainOscVol" v-model="subLFOApply">Vol.(Wave1)
+					<input type="checkbox" value="subOscFreq" v-model="subLFOApply">Freq.(Wave2)
+					<input type="checkbox" value="subOscVol" v-model="subLFOApply">Vol.(Wave2)
+					<br>
+					<input type="checkbox" value="LPFCutoff" v-model="subLFOApply">Cutoff(LPF)
+					<input type="checkbox" value="LPFEmphasis" v-model="subLFOApply">Emp.(LPF)
+					<input type="checkbox" value="HPFCutoff" v-model="subLFOApply">Cutoff(HPF)
+					<input type="checkbox" value="HPFEmphasis" v-model="subLFOApply">Emp.(HPF)
+					<br>
+					<input type="checkbox" value="mainLFORate" v-model="subLFOApply">Rate(LFO1)
+					<input type="checkbox" value="mainLFODepth" v-model="subLFOApply">Depth(LFO1)
+				</div>
+			</div>
+		</main>
 		<!--その他-->
 		<span>Master</span><input type="range" min="0" max="700" v-model="masterGain">
 		<ul class="set">
