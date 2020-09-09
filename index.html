@@ -1,12 +1,15 @@
 <html lang="ja">
-	<head>
-		<meta charset="utf-8">
-		<title>button</title>
-		<link href="style.css" rel="stylesheet">
-	</head>
-	<body onload="init()">
-		<div id="app">
-			<main style="display: flex">
+
+<head>
+	<meta charset="utf-8">
+	<title>mini-synthe</title>
+	<link href="style.css" rel="stylesheet">
+</head>
+
+<body onload="init()">
+	<div id="app">
+		<!--オシレーター部-->
+		<main style="display: flex">
 			<div class="box">
 				<span>Wave 1</span>
 				<br>
@@ -15,8 +18,11 @@
 				<input type="radio" value="sawtooth" v-model="mainWave">Sawtooth
 				<input type="radio" value="triangle" v-model="mainWave">Triangle
 				<br>
-				<span>Volume</span><input type="range" min="0" max="1000" v-model="mainGain">
-				<span>Detune</span><input type="range" min="-100" max="100" v-model="mainDetune">
+				<span>Octave</span><input type="tel" size="1" v-model="mainOctave">
+				<span>Pitch</span><input type="tel" size="1" v-model="mainDetune"><input type="range" min="-200"
+					max="200" v-model="mainDetune">
+				<br>
+				<span>Volume</span><input type="range" min="0" max="700" v-model="mainGain">
 			</div>
 			<div class="box">
 				<span>Wave 2</span>
@@ -26,29 +32,57 @@
 				<input type="radio" value="sawtooth" v-model="subWave">Sawtooth
 				<input type="radio" value="triangle" v-model="subWave">Triangle
 				<br>
-				<span>Volume</span><input type="range" min="0" max="1000" v-model="subGain">
-				<span>Detune</span><input type="range" min="-100" max="100" v-model="subDetune">
+				<span>Octave</span><input type="tel" size="1" v-model="subOctave">
+				<span>Pitch</span><input type="tel" size="1" v-model="subDetune"><input type="range" min="-200"
+					max="200" v-model="subDetune">
+				<br>
+				<span>Volume</span><input type="range" min="0" max="700" v-model="subGain">
 			</div>
+		</main>
+		<!--フィルター部-->
+		<main class="box">
+			<span>Filter(LPF & HPF)</span>
+			<br>
+			<main style="display: flex">
+				<div>
+					<span>Low Pass</span>
+					<br>
+					<span>Cutoff</span><input type="tel" size="1" v-model="LPFCutoff"><input type="range" min="0" max="17000" v-model="LPFCutoff">
+					<br>
+					<span>Emphasis</span><input type="tel" size="1" v-model="LPFEmphasis"><input type="range" min="0" max="100" v-model="LPFEmphasis">
+				</div>
+				<div>
+					<span>High Pass</span>
+					<br>
+					<span>Cutoff</span><input type="tel" size="1" v-model="HPFCutoff"><input type="range" min="0" max="17000" v-model="HPFCutoff">
+					<br>
+					<span>Emphasis</span><input type="tel" size="1" v-model="HPFEmphasis"><input type="range" min="0" max="100" v-model="HPFEmphasis">
+				</div>
 			</main>
-			<ul class="set">
-				<li class="white c" v-on:click="keyPlay(72)"></li>
-				<li class="black cs" v-on:click="keyPlay(73)"></li>
-				<li class="white d" v-on:click="keyPlay(74)"></li>
-				<li class="black ds" v-on:click="keyPlay(75)"></li>
-				<li class="white e" v-on:click="keyPlay(76)"></li>
-				<li class="white f" v-on:click="keyPlay(77)"></li>
-				<li class="black fs" v-on:click="keyPlay(78)"></li>
-				<li class="white g" v-on:click="keyPlay(79)"></li>
-				<li class="black gs" v-on:click="keyPlay(80)"></li>
-				<li class="white a" v-on:click="keyPlay(81)"></li>
-				<li class="black as" v-on:click="keyPlay(82)"></li>
-				<li class="white b" v-on:click="keyPlay(83)"></li>
-			  </ul>
-			<span>{{$data}}</span>
-		</div>
-		<script
-		src="https://cdn.jsdelivr.net/npm/vue@2.5.13/dist/vue.js">
-		</script>
-		<script src="index.js"></script>
-	</body>
+		</main>
+		<!--エンベロープ-->
+		<!--LFO-->
+		<!--その他-->
+		<span>Master</span><input type="range" min="0" max="700" v-model="masterGain">
+		<ul class="set">
+			<li class="white c" v-on:click="keyPlay(60)"></li>
+			<li class="black cs" v-on:click="keyPlay(61)"></li>
+			<li class="white d" v-on:click="keyPlay(62)"></li>
+			<li class="black ds" v-on:click="keyPlay(63)"></li>
+			<li class="white e" v-on:click="keyPlay(64)"></li>
+			<li class="white f" v-on:click="keyPlay(65)"></li>
+			<li class="black fs" v-on:click="keyPlay(66)"></li>
+			<li class="white g" v-on:click="keyPlay(67)"></li>
+			<li class="black gs" v-on:click="keyPlay(68)"></li>
+			<li class="white a" v-on:click="keyPlay(69)"></li>
+			<li class="black as" v-on:click="keyPlay(70)"></li>
+			<li class="white b" v-on:click="keyPlay(71)"></li>
+		</ul>
+		<span>{{$data}}</span>
+	</div>
+	<script src="https://cdn.jsdelivr.net/npm/vue@2.5.13/dist/vue.js">
+	</script>
+	<script src="index.js"></script>
+</body>
+
 </html>

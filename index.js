@@ -18,6 +18,11 @@ function init() {
 		API.LMSSetValue('cmi.core.lesson_status', 'browsed')
 		API.LMSCommit("")
 		console.log("APIを初期化しました")
+		//完了したことを示す部分
+		//他に適切な部分があればそこに書く
+		API.LMSSetValue('cmi.core.lesson_status', 'completed')
+		API.LMSCommit("")
+		API.LMSFinish("")
 	}
 }
 //引数のmidiノート番号の周波数を計算する
@@ -81,19 +86,31 @@ var app = new Vue({
 	el: '#app',
 	data: {
 		audioContext: [],
+		//Wave 1
 		mainosc: [],
 		mainWave: "sine",
-		mainGain: 500,
+		mainGain: 350,
 		mainDetune: 0,
-		mainLFO:[],
+		mainOctave: 4,
+		mainOscVolume: [],
+		//Wave 2
 		subosc: [],
 		subWave: "sine",
-		subGain: 500,
+		subGain: 350,
 		subDetune: 0,
-		subLFO:[],
-		mainOscVolume: [],
+		subOctave: 4,
 		subOscVolume: [],
+		//Filter
+		LPF: [],
+		LPFCutoff: 15000,
+		LPFEmphasis: 5,
+		HPF: [],
+		HPFCutoff: 50,
+		HPFEmphasis: 5,
+		//LFO 1
+		//Others
 		masterVolume:[],
+		masterGain: 500,
 		nowplaying: false,
 		note: 72
 	},
@@ -103,12 +120,16 @@ var app = new Vue({
 			this.mainOscVolume.gain.value = this.mainGain / 1000
 			this.subOscVolume.gain.value=this.subGain/1000
 			this.mainosc.type=this.mainWave
-			this.mainosc.frequency.value=calcFrequency(note)
+			this.mainosc.frequency.value=calcFrequency(note+(this.mainOctave-4)*12)
 			this.mainosc.detune.value=this.mainDetune
 			this.subosc.type=this.subWave
-			this.subosc.frequency.value=calcFrequency(note)
+			this.subosc.frequency.value=calcFrequency(note+(this.subOctave-4)*12)
 			this.subosc.detune.value=this.subDetune
-			this.masterVolume.gain.value=1
+			this.LPF.frequency.value=this.LPFCutoff
+			this.LPF.Q.value=this.LPFEmphasis
+			this.HPF.frequency.value=this.HPFCutoff
+			this.HPF.Q.value=this.HPFEmphasis
+			this.masterVolume.gain.value=this.masterGain/1000
 			if (!this.nowplaying) {
 				this.mainosc.start(0)
 				this.subosc.start(0)
@@ -118,6 +139,7 @@ var app = new Vue({
 		}
 	},
 	created: function () {
+		//各インスタンスの初期化
 		this.audioContext = new AudioContext()
 		this.mainosc = this.audioContext.createOscillator()
 		this.subosc = this.audioContext.createOscillator()
@@ -125,15 +147,24 @@ var app = new Vue({
 		this.subLFO = this.audioContext.createOscillator()
 		this.subOscVolume = this.audioContext.createGain()
 		this.mainOscVolume = this.audioContext.createGain()
+		this.LPF = this.audioContext.createBiquadFilter()
+		this.HPF = this.audioContext.createBiquadFilter()
+		this.LPF.type="lowpass"
+		this.HPF.type="highpass"
 		this.masterVolume = this.audioContext.createGain()
 		this.masterVolume.gain.value = 0
+		//ここから初期設定のconnect
+		//後で移す
 		this.subosc.connect(this.subOscVolume)
-		this.subOscVolume.connect(this.masterVolume)
+		this.subOscVolume.connect(this.LPF)
 		this.mainosc.connect(this.mainOscVolume)
-		this.mainOscVolume.connect(this.masterVolume)
+		this.mainOscVolume.connect(this.LPF)
+		this.LPF.connect(this.HPF)
+		this.HPF.connect(this.masterVolume)
 		this.masterVolume.connect(this.audioContext.destination)
 	},
 	destroyed: function () {
+		this.mainosc.stop(0)
 		this.subosc.stop(0)
 	}
 })
