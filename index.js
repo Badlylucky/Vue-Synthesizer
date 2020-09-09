@@ -121,6 +121,8 @@ var app = new Vue({
 		subLFOApply: [],
 		subLFOGain: [],
 		subLFODepth: 10,
+		//Env 1
+		//Env 2
 		//Others
 		masterVolume:[],
 		masterGain: 500,

@@ -3,6 +3,7 @@ ul {
 	height:10em;
 	width:34em;
 	position:relative;
+	left: 100px;
   }
   
   li {
@@ -10,7 +11,7 @@ ul {
 	padding:0;
 	list-style:none;
 	position:relative;
-	float:left
+	float:left;
   }
   
   ul .white {
@@ -63,7 +64,20 @@ ul {
 	border-radius:0 5px 5px 5px
   }
 
-.box{
+.half-box{
 	border: 2px dotted black;
+	width: 350px;
+}
+.full-box{
+	border: 2px dotted black;
+	width: 700px;
+}
+
+.range-small{
+	width: 70px;
+}
+
+.synth{
+	width: 704px;
 }
   
