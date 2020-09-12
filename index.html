@@ -7,138 +7,150 @@
 </head>
 
 <body onload="init()">
-	<div class="synth" id="app">
-		<!--オシレーター部-->
-		<main style="display: flex">
-			<div class="half-box">
-				<span>Wave 1</span>
-				<br>
-				<input type="radio" value="sine" v-model="mainWave">Sine
-				<input type="radio" value="square" v-model="mainWave">Square
-				<input type="radio" value="sawtooth" v-model="mainWave">Sawtooth
-				<input type="radio" value="triangle" v-model="mainWave">Triangle
-				<br>
-				<span>Octave</span><input type="tel" size="1" v-model="mainOctave">
-				<span>Pitch</span><input type="tel" size="1" v-model="mainDetune"><input type="range" min="-200"
-					max="200" v-model="mainDetune">
-				<br>
-				<span>Volume</span><input type="range" min="0" max="700" v-model="mainGain">
-			</div>
-			<div class="half-box">
-				<span>Wave 2</span>
-				<br>
-				<input type="radio" value="sine" v-model="subWave">Sine
-				<input type="radio" value="square" v-model="subWave">Square
-				<input type="radio" value="sawtooth" v-model="subWave">Sawtooth
-				<input type="radio" value="triangle" v-model="subWave">Triangle
-				<br>
-				<span>Octave</span><input type="tel" size="1" v-model="subOctave">
-				<span>Pitch</span><input type="tel" size="1" v-model="subDetune"><input type="range" min="-200"
-					max="200" v-model="subDetune">
-				<br>
-				<span>Volume</span><input type="range" min="0" max="700" v-model="subGain">
-			</div>
-		</main>
-		<!--フィルター部-->
-		<main class="full-box">
-			<span>Filter(LPF & HPF)</span>
-			<br>
+	<div id="app" v-on:mouseup="keyStop()">
+		<div class="synth">
+			<!--オシレーター部-->
 			<main style="display: flex">
-				<div>
-					<span>Low Pass</span>
+				<div class="half-box">
+					<span>Wave 1</span>
 					<br>
-					<span>Cutoff</span><input type="tel" size="1" v-model="LPFCutoff"><input type="range" min="0"
-						max="17000" v-model="LPFCutoff">
+					<input type="radio" value="sine" v-model="mainWave">Sine
+					<input type="radio" value="square" v-model="mainWave">Square
+					<input type="radio" value="sawtooth" v-model="mainWave">Sawtooth
+					<input type="radio" value="triangle" v-model="mainWave">Triangle
 					<br>
-					<span>Emphasis</span><input type="tel" size="1" v-model="LPFEmphasis"><input type="range" min="0"
-						max="100" v-model="LPFEmphasis">
+					<span>Octave</span><input type="tel" class="text-small" v-model="mainOctave">
+					<span>Pitch</span><input type="tel" class="text-mid" v-model="mainDetune"><input type="range" min="-200"
+						max="200" v-model="mainDetune">
+					<br>
+					<span>Volume</span><input type="range" min="0" max="500" v-model="mainGain">
 				</div>
-				<div>
-					<span>High Pass</span>
+				<div class="half-box">
+					<span>Wave 2</span>
 					<br>
-					<span>Cutoff</span><input type="tel" size="1" v-model="HPFCutoff"><input type="range" min="0"
-						max="17000" v-model="HPFCutoff">
+					<input type="radio" value="sine" v-model="subWave">Sine
+					<input type="radio" value="square" v-model="subWave">Square
+					<input type="radio" value="sawtooth" v-model="subWave">Sawtooth
+					<input type="radio" value="triangle" v-model="subWave">Triangle
 					<br>
-					<span>Emphasis</span><input type="tel" size="1" v-model="HPFEmphasis"><input type="range" min="0"
-						max="100" v-model="HPFEmphasis">
+					<span>Octave</span><input type="tel" class="text-small" v-model="subOctave">
+					<span>Pitch</span><input type="tel" class="text-mid" v-model="subDetune"><input type="range" min="-200"
+						max="200" v-model="subDetune">
+					<br>
+					<span>Volume</span><input type="range" min="0" max="500" v-model="subGain">
 				</div>
 			</main>
-		</main>
-		<!--エンベロープ-->
-		<!--LFO-->
-		<main style="display: flex">
-			<div class="half-box">
-				<span>LFO 1</span>
+			<!--フィルター部-->
+			<main class="full-box">
+				<span>Filter(LPF & HPF)</span>
 				<br>
-				<input type="radio" value="sine" v-model="mainLFOWave">Sine
-				<input type="radio" value="square" v-model="mainLFOWave">Square
-				<input type="radio" value="sawtooth" v-model="mainLFOWave">Sawtooth
-				<input type="radio" value="triangle" v-model="mainLFOWave">Triangle
-				<br>
-				<span>Rate</span><input type="tel" size="1" v-model="mainLFORate"><input type="range" class="range-small" min="0" max="15"
-					v-model="mainLFORate">
-				<span>Depth</span><input type="range" min="0" max="50" v-model="mainLFODepth">
-				<br>
-				<div style="font-size: 60%;">
-					<input type="checkbox" value="mainOscFreq" v-model="mainLFOApply">Freq.(Wave1)
-					<input type="checkbox" value="mainOscVol" v-model="mainLFOApply">Vol.(Wave1)
-					<input type="checkbox" value="subOscFreq" v-model="mainLFOApply">Freq.(Wave2)
-					<input type="checkbox" value="subOscVol" v-model="mainLFOApply">Vol.(Wave2)
+				<main style="display: flex">
+					<div>
+						<span>Low Pass</span>
+						<br>
+						<span>Cutoff</span><input type="tel" class="text-large" v-model="LPFCutoff"><input type="range" min="0"
+							max="17000" v-model="LPFCutoff">
+						<br>
+						<span>Emphasis</span><input type="tel" class="text-mid" v-model="LPFEmphasis"><input type="range"
+							min="0" max="20" step="0.1" v-model="LPFEmphasis">
+					</div>
+					<div>
+						<span>High Pass</span>
+						<br>
+						<span>Cutoff</span><input type="tel" class="text-large" v-model="HPFCutoff"><input type="range" min="0"
+							max="17000" v-model="HPFCutoff">
+						<br>
+						<span>Emphasis</span><input type="tel" class="text-mid" v-model="HPFEmphasis"><input type="range"
+							min="0" max="20" step="0.1" v-model="HPFEmphasis">
+					</div>
+				</main>
+			</main>
+			<!--エンベロープ-->
+			<!--LFO-->
+			<main style="display: flex">
+				<div class="half-box">
+					<span>LFO 1</span>
 					<br>
-					<input type="checkbox" value="LPFCutoff" v-model="mainLFOApply">Cutoff(LPF)
-					<input type="checkbox" value="LPFEmphasis" v-model="mainLFOApply">Emp.(LPF)
-					<input type="checkbox" value="HPFCutoff" v-model="mainLFOApply">Cutoff(HPF)
-					<input type="checkbox" value="HPFEmphasis" v-model="mainLFOApply">Emp.(HPF)
+					<input type="radio" value="sine" v-model="mainLFOWave">Sine
+					<input type="radio" value="square" v-model="mainLFOWave">Square
+					<input type="radio" value="sawtooth" v-model="mainLFOWave">Sawtooth
+					<input type="radio" value="triangle" v-model="mainLFOWave">Triangle
+					<br>
+					<span>Rate</span><input type="tel" class="text-large" v-model="mainLFORate"><input type="range"
+						class="range-small" min="0" max="15" v-model="mainLFORate">
+					<span>Depth</span><input type="range" min="0" max="50" v-model="mainLFODepth">
+					<br>
+					<div style="font-size: 60%;">
+						<input type="checkbox" value="mainOscFreq" v-model="mainLFOApply">Freq.(Wave1)
+						<input type="checkbox" value="mainOscVol" v-model="mainLFOApply">Vol.(Wave1)
+						<input type="checkbox" value="subOscFreq" v-model="mainLFOApply">Freq.(Wave2)
+						<input type="checkbox" value="subOscVol" v-model="mainLFOApply">Vol.(Wave2)
+						<br>
+						<input type="checkbox" value="LPFCutoff" v-model="mainLFOApply">Cutoff(LPF)
+						<input type="checkbox" value="LPFEmphasis" v-model="mainLFOApply">Emp.(LPF)
+						<input type="checkbox" value="HPFCutoff" v-model="mainLFOApply">Cutoff(HPF)
+						<input type="checkbox" value="HPFEmphasis" v-model="mainLFOApply">Emp.(HPF)
+					</div>
 				</div>
-			</div>
-			<div class="half-box">
-				<span>LFO 2</span>
-				<br>
-				<input type="radio" value="sine" v-model="subLFOWave">Sine
-				<input type="radio" value="square" v-model="subLFOWave">Square
-				<input type="radio" value="sawtooth" v-model="subLFOWave">Sawtooth
-				<input type="radio" value="triangle" v-model="subLFOWave">Triangle
-				<br>
-				<span>Rate</span><input type="tel" size="1" v-model="subLFORate"><input type="range" class="range-small" min="0" max="15"
-					v-model="subLFORate">
-				<span>Depth</span><input type="range" min="0" max="50" v-model="subLFODepth">
-				<br>
-				<div style="font-size:60%">
-					<input type="checkbox" value="mainOscFreq" v-model="subLFOApply">Freq.(Wave1)
-					<input type="checkbox" value="mainOscVol" v-model="subLFOApply">Vol.(Wave1)
-					<input type="checkbox" value="subOscFreq" v-model="subLFOApply">Freq.(Wave2)
-					<input type="checkbox" value="subOscVol" v-model="subLFOApply">Vol.(Wave2)
+				<div class="half-box">
+					<span>LFO 2</span>
 					<br>
-					<input type="checkbox" value="LPFCutoff" v-model="subLFOApply">Cutoff(LPF)
-					<input type="checkbox" value="LPFEmphasis" v-model="subLFOApply">Emp.(LPF)
-					<input type="checkbox" value="HPFCutoff" v-model="subLFOApply">Cutoff(HPF)
-					<input type="checkbox" value="HPFEmphasis" v-model="subLFOApply">Emp.(HPF)
+					<input type="radio" value="sine" v-model="subLFOWave">Sine
+					<input type="radio" value="square" v-model="subLFOWave">Square
+					<input type="radio" value="sawtooth" v-model="subLFOWave">Sawtooth
+					<input type="radio" value="triangle" v-model="subLFOWave">Triangle
 					<br>
-					<input type="checkbox" value="mainLFORate" v-model="subLFOApply">Rate(LFO1)
-					<input type="checkbox" value="mainLFODepth" v-model="subLFOApply">Depth(LFO1)
+					<span>Rate</span><input type="tel" class="text-large" v-model="subLFORate"><input type="range"
+						class="range-small" min="0" max="15" v-model="subLFORate">
+					<span>Depth</span><input type="range" min="0" max="50" v-model="subLFODepth">
+					<br>
+					<div style="font-size:60%">
+						<input type="checkbox" value="mainOscFreq" v-model="subLFOApply">Freq.(Wave1)
+						<input type="checkbox" value="mainOscVol" v-model="subLFOApply">Vol.(Wave1)
+						<input type="checkbox" value="subOscFreq" v-model="subLFOApply">Freq.(Wave2)
+						<input type="checkbox" value="subOscVol" v-model="subLFOApply">Vol.(Wave2)
+						<br>
+						<input type="checkbox" value="LPFCutoff" v-model="subLFOApply">Cutoff(LPF)
+						<input type="checkbox" value="LPFEmphasis" v-model="subLFOApply">Emp.(LPF)
+						<input type="checkbox" value="HPFCutoff" v-model="subLFOApply">Cutoff(HPF)
+						<input type="checkbox" value="HPFEmphasis" v-model="subLFOApply">Emp.(HPF)
+						<br>
+						<input type="checkbox" value="mainLFORate" v-model="subLFOApply">Rate(LFO1)
+						<input type="checkbox" value="mainLFODepth" v-model="subLFOApply">Depth(LFO1)
+					</div>
 				</div>
-			</div>
-		</main>
-		<!--その他-->
-		<span>Master</span><input type="range" min="0" max="700" v-model="masterGain">
-		<ul class="set">
-			<li class="white c" v-on:click="keyPlay(60)"></li>
-			<li class="black cs" v-on:click="keyPlay(61)"></li>
-			<li class="white d" v-on:click="keyPlay(62)"></li>
-			<li class="black ds" v-on:click="keyPlay(63)"></li>
-			<li class="white e" v-on:click="keyPlay(64)"></li>
-			<li class="white f" v-on:click="keyPlay(65)"></li>
-			<li class="black fs" v-on:click="keyPlay(66)"></li>
-			<li class="white g" v-on:click="keyPlay(67)"></li>
-			<li class="black gs" v-on:click="keyPlay(68)"></li>
-			<li class="white a" v-on:click="keyPlay(69)"></li>
-			<li class="black as" v-on:click="keyPlay(70)"></li>
-			<li class="white b" v-on:click="keyPlay(71)"></li>
-		</ul>
-		<span>{{$data}}</span>
+			</main>
+			<!--エンベロープ-->
+			<main class="full-box">
+				<span>Envelope(Master Volume)</span>
+				<br>
+				<span>Attack</span><input type="tel" class="text-mid" v-model="attack"><input type="range" min="0.01" max="2.0" step="0.01" v-model="attack">
+				<span>Attack Curve</span><input type="tel" class="text-mid" v-model="attackCurve"><input type="range" min="0" max="1" step="0.01" v-model="attackCurve">
+				<br>
+				<span>Decay</span><input type="tel" class="text-mid" v-model="decay"><input type="range" min="0.0" max="2.0" step="0.01" v-model="decay">
+				<span>Sustain</span><input type="tel" class="text-mid" v-model="sustain"><input type="range" min="0.0" max="1.0" step="0.01" v-model="sustain">
+				<span>Release</span><input type="tel" class="text-mid" v-model="release"><input type="range" min="0.01" max="2.0" step="0.01" v-model="release">
+			</main>
+			<ul class="set">
+				<li class="white c" v-on:mousedown="keyPlay(60)" v-on:mouseup="keyStop()"></li>
+				<li class="black cs" v-on:mousedown="keyPlay(61)" v-on:mouseup="keyStop()"></li>
+				<li class="white d" v-on:mousedown="keyPlay(62)" v-on:mouseup="keyStop()"></li>
+				<li class="black ds" v-on:mousedown="keyPlay(63)" v-on:mouseup="keyStop()"></li>
+				<li class="white e" v-on:mousedown="keyPlay(64)" v-on:mouseup="keyStop()"></li>
+				<li class="white f" v-on:mousedown="keyPlay(65)" v-on:mouseup="keyStop()"></li>
+				<li class="black fs" v-on:mousedown="keyPlay(66)" v-on:mouseup="keyStop()"></li>
+				<li class="white g" v-on:mousedown="keyPlay(67)" v-on:mouseup="keyStop()"></li>
+				<li class="black gs" v-on:mousedown="keyPlay(68)" v-on:mouseup="keyStop()"></li>
+				<li class="white a" v-on:mousedown="keyPlay(69)" v-on:mouseup="keyStop()"></li>
+				<li class="black as" v-on:mousedown="keyPlay(70)" v-on:mouseup="keyStop()"></li>
+				<li class="white b" v-on:mousedown="keyPlay(71)" v-on:mouseup="keyStop()"></li>
+			</ul>
+			<span>{{$data}}</span>
+		</div>
 	</div>
 	<script src="https://cdn.jsdelivr.net/npm/vue@2.5.13/dist/vue.js">
 	</script>
+	<script src="audioworklet-adsrnode-master/audioworklet-adsrnode.js"></script>
 	<script src="index.js"></script>
 </body>
 

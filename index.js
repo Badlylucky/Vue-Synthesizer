@@ -121,11 +121,15 @@ var app = new Vue({
 		subLFOApply: [],
 		subLFOGain: [],
 		subLFODepth: 10,
-		//Env 1
-		//Env 2
+		//Env
+		Envelope: [],
+		attack: 0.5,
+		attackCurve: 0.0,
+		decay: 0.5,
+		sustain: 0.5,
+		release: 0.5,
 		//Others
 		masterVolume:[],
-		masterGain: 500,
 		nowplaying: false,
 		note: 72
 	},
@@ -144,7 +148,11 @@ var app = new Vue({
 			this.LPF.Q.value=this.LPFEmphasis;
 			this.HPF.frequency.value=this.HPFCutoff;
 			this.HPF.Q.value=this.HPFEmphasis;
-			this.masterVolume.gain.value=this.masterGain/1000;
+			this.Envelope.attack.value=this.attack;
+			this.Envelope.attackcurve.value=this.attackCurve;
+			this.Envelope.decay.value=this.decay;
+			this.Envelope.sustain.value=this.sustain;
+			this.Envelope.release.value=this.release;
 			this.setLFO();
 			if (!this.nowplaying) {
 				this.mainosc.start(0);
@@ -153,7 +161,10 @@ var app = new Vue({
 				this.subLFO.start(0);
 				this.nowplaying = true;
 			}
-			setTimeout(function () { app.masterVolume.gain.value = 0 }, 400);
+			this.Envelope.trigger.value=1;
+		},
+		keyStop:function(){
+			this.Envelope.trigger.value = 0;
 		},
 		//LFOに値を設定して接続する
 		setLFO:function(){
@@ -217,9 +228,10 @@ var app = new Vue({
 			}
 		}
 	},
-	created: function () {
+	created: async function () {
 		//各インスタンスの初期化
 		this.audioContext = new AudioContext();
+		await AdsrNode.Initialize(this.audioContext);
 		this.mainosc = this.audioContext.createOscillator();
 		this.subosc = this.audioContext.createOscillator();
 		this.mainLFO = this.audioContext.createOscillator();
@@ -232,6 +244,7 @@ var app = new Vue({
 		this.HPF = this.audioContext.createBiquadFilter();
 		this.LPF.type="lowpass";
 		this.HPF.type="highpass";
+		this.Envelope = new AdsrNode(this.audioContext);
 		this.masterVolume = this.audioContext.createGain();
 		this.masterVolume.gain.value = 0;
 		//ここから初期設定のconnect
@@ -244,11 +257,14 @@ var app = new Vue({
 		this.HPF.connect(this.masterVolume);
 		this.mainLFO.connect(this.mainLFOGain);
 		this.subLFO.connect(this.subLFOGain);
+		this.Envelope.connect(this.masterVolume.gain);
 		this.masterVolume.connect(this.audioContext.destination);
 	},
 	destroyed: function () {
 		this.mainosc.stop(0);
 		this.subosc.stop(0);
+		this.mainLFO.stop(0);
+		this.subLFO.stop(0);
 	}
 })
 function sendResult() {

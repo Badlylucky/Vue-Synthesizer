@@ -79,5 +79,19 @@ ul {
 
 .synth{
 	width: 704px;
+	position: relative;
+	left: 25%;
+}
+
+input.text-small{
+	width: 25px;
+}
+
+input.text-mid{
+	width: 35px;
+}
+
+input.text-large{
+	width: 50px;
 }
   
