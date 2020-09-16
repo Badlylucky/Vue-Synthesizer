@@ -19,9 +19,11 @@
 					<input type="radio" value="sawtooth" v-model="mainWave">Sawtooth
 					<input type="radio" value="triangle" v-model="mainWave">Triangle
 					<br>
-					<span>Octave</span><input type="tel" class="text-small" v-model="mainOctave">
-					<span>Pitch</span><input type="tel" class="text-mid" v-model="mainDetune"><input type="range" min="-200"
-						max="200" v-model="mainDetune">
+					<span>Octave</span><input type="tel" class="text-small"
+						v-on:blur="function(){mainOctave=clampInput(mainOctave,-3,11,4)}" v-model="mainOctave">
+					<span>Pitch</span><input type="tel" class="text-mid"
+						v-on:blur="function(){mainDetune=clampInput(mainDetune,-153600,153600,0)}" v-model="mainDetune">
+					<input type="range" min="-200" max="200" v-model="mainDetune">
 					<br>
 					<span>Volume</span><input type="range" min="0" max="500" v-model="mainGain">
 				</div>
@@ -33,9 +35,11 @@
 					<input type="radio" value="sawtooth" v-model="subWave">Sawtooth
 					<input type="radio" value="triangle" v-model="subWave">Triangle
 					<br>
-					<span>Octave</span><input type="tel" class="text-small" v-model="subOctave">
-					<span>Pitch</span><input type="tel" class="text-mid" v-model="subDetune"><input type="range" min="-200"
-						max="200" v-model="subDetune">
+					<span>Octave</span><input type="tel" class="text-small"
+						v-on:blur="function(){subOctave=clampInput(subOctave,-3,11,4)}" v-model="subOctave">
+					<span>Pitch</span><input type="tel" class="text-mid"
+						v-on:blur="function(){subDetune=clampInput(subDetune,-153600,153600,0)}" v-model="subDetune">
+					<input type="range" min="-200" max="200" v-model="subDetune">
 					<br>
 					<span>Volume</span><input type="range" min="0" max="500" v-model="subGain">
 				</div>
@@ -48,20 +52,24 @@
 					<div>
 						<span>Low Pass</span>
 						<br>
-						<span>Cutoff</span><input type="tel" class="text-large" v-model="LPFCutoff"><input type="range" min="0"
-							max="17000" v-model="LPFCutoff">
+						<span>Cutoff</span><input type="tel" class="text-large"
+							v-on:blur="function(){LPFCutoff=clampInput(LPFCutoff,0,24000,15000)}" v-model="LPFCutoff">
+						<input type="range" min="0" max="17000" v-model="LPFCutoff">
 						<br>
-						<span>Emphasis</span><input type="tel" class="text-mid" v-model="LPFEmphasis"><input type="range"
-							min="0" max="20" step="0.1" v-model="LPFEmphasis">
+						<span>Emphasis</span><input type="tel" class="text-mid"
+							v-on:blur="function(){LPFEmphasis=clampInput(LPFEmphasis,0,30,5)}" v-model="LPFEmphasis">
+						<input type="range" min="0" max="20" step="0.1" v-model="LPFEmphasis">
 					</div>
 					<div>
 						<span>High Pass</span>
 						<br>
-						<span>Cutoff</span><input type="tel" class="text-large" v-model="HPFCutoff"><input type="range" min="0"
-							max="17000" v-model="HPFCutoff">
+						<span>Cutoff</span><input type="tel" class="text-large"
+							v-on:blur="function(){HPFCutoff=clampInput(HPFCutoff,0,24000,50)}" v-model="HPFCutoff">
+						<input type="range" min="0" max="17000" v-model="HPFCutoff">
 						<br>
-						<span>Emphasis</span><input type="tel" class="text-mid" v-model="HPFEmphasis"><input type="range"
-							min="0" max="20" step="0.1" v-model="HPFEmphasis">
+						<span>Emphasis</span><input type="tel" class="text-mid"
+							v-on:blur="function(){HPFEmphasis=clampInput(HPFEmphasis,0,30,5)}" v-model="HPFEmphasis">
+						<input type="range" min="0" max="20" step="0.1" v-model="HPFEmphasis">
 					</div>
 				</main>
 			</main>
@@ -76,9 +84,21 @@
 					<input type="radio" value="sawtooth" v-model="mainLFOWave">Sawtooth
 					<input type="radio" value="triangle" v-model="mainLFOWave">Triangle
 					<br>
-					<span>Rate</span><input type="tel" class="text-large" v-model="mainLFORate"><input type="range"
-						class="range-small" min="0" max="15" v-model="mainLFORate">
-					<span>Depth</span><input type="range" min="0" max="50" v-model="mainLFODepth">
+					<span>Rate</span><input type="tel" class="text-large"
+						v-on:blur="function(){mainLFORate=clampInput(mainLFORate,-10000,10000,5)}"
+						v-model="mainLFORate">
+					<input type="range" class="range-small" min="0" max="15" v-model="mainLFORate">
+					<input type="checkbox" v-model="mainLFOSync">Sync.
+					<br>
+					<span>Depth</span><input type="tel" class="text-large"
+						v-on:blur="function(){mainLFODepth=clampInput(mainLFODepth,-1000000,1000000,10)}"
+						v-model="mainLFODepth">
+					<span v-if="mainLFOSync">
+						<input type="range" class="range-large" min="0" max="10000" v-model="mainLFODepth">
+					</span>
+					<span v-else>
+						<input type="range" class="range-large" min="0" max="100" v-model="mainLFODepth">
+					</span>
 					<br>
 					<div style="font-size: 60%;">
 						<input type="checkbox" value="mainOscFreq" v-model="mainLFOApply">Freq.(Wave1)
@@ -90,6 +110,11 @@
 						<input type="checkbox" value="LPFEmphasis" v-model="mainLFOApply">Emp.(LPF)
 						<input type="checkbox" value="HPFCutoff" v-model="mainLFOApply">Cutoff(HPF)
 						<input type="checkbox" value="HPFEmphasis" v-model="mainLFOApply">Emp.(HPF)
+						<br>
+						<input type="checkbox" value="mainLFORate" v-model="mainLFOApply">Rate(LFO1)
+						<input type="checkbox" value="mainLFODepth" v-model="mainLFOApply">Depth(LFO1)
+						<input type="checkbox" value="subLFORate" v-model="mainLFOApply">Rate(LFO2)
+						<input type="checkbox" value="subLFODepth" v-model="mainLFOApply">Depth(LFO2)
 					</div>
 				</div>
 				<div class="half-box">
@@ -100,9 +125,20 @@
 					<input type="radio" value="sawtooth" v-model="subLFOWave">Sawtooth
 					<input type="radio" value="triangle" v-model="subLFOWave">Triangle
 					<br>
-					<span>Rate</span><input type="tel" class="text-large" v-model="subLFORate"><input type="range"
-						class="range-small" min="0" max="15" v-model="subLFORate">
-					<span>Depth</span><input type="range" min="0" max="50" v-model="subLFODepth">
+					<span>Rate</span><input type="tel" class="text-large"
+						v-on:blur="function(){subLFORate=clampInput(subLFORate,-10000,10000,5)}" v-model="subLFORate">
+					<input type="range" class="range-small" min="0" max="15" v-model="subLFORate">
+					<input type="checkbox" v-model="subLFOSync">Sync.
+					<br>
+					<span>Depth</span><input type="tel" class="text-large"
+						v-on:blur="function(){subLFODepth=clampInput(subLFODepth,-1000000,1000000,10)}"
+						v-model="subLFODepth">
+					<span v-if="subLFOSync">
+						<input type="range" class="range-large" min="0" max="10000" v-model="subLFODepth">
+					</span>
+					<span v-else>
+						<input type="range" class="range-large" min="0" max="100" v-model="subLFODepth">
+					</span>
 					<br>
 					<div style="font-size:60%">
 						<input type="checkbox" value="mainOscFreq" v-model="subLFOApply">Freq.(Wave1)
@@ -117,6 +153,8 @@
 						<br>
 						<input type="checkbox" value="mainLFORate" v-model="subLFOApply">Rate(LFO1)
 						<input type="checkbox" value="mainLFODepth" v-model="subLFOApply">Depth(LFO1)
+						<input type="checkbox" value="subLFORate" v-model="subLFOApply">Rate(LFO2)
+						<input type="checkbox" value="subLFODepth" v-model="subLFOApply">Depth(LFO2)
 					</div>
 				</div>
 			</main>
@@ -124,12 +162,22 @@
 			<main class="full-box">
 				<span>Envelope(Master Volume)</span>
 				<br>
-				<span>Attack</span><input type="tel" class="text-mid" v-model="attack"><input type="range" min="0.01" max="2.0" step="0.01" v-model="attack">
-				<span>Attack Curve</span><input type="tel" class="text-mid" v-model="attackCurve"><input type="range" min="0" max="1" step="0.01" v-model="attackCurve">
+				<span>Attack</span><input type="tel" class="text-mid"
+					v-on:blur="function(){attack=clampInput(attack,0.01,60.0,0.5)}" v-model="attack">
+				<input type="range" min="0.01" max="2.0" step="0.01" v-model="attack">
+				<span>Attack Curve</span><input type="tel" class="text-mid"
+					v-on:blur="function(){attackCurve=clampInput(attackCurve,0,1.0,0)}" v-model="attackCurve"><input
+					type="range" min="0" max="1" step="0.01" v-model="attackCurve">
 				<br>
-				<span>Decay</span><input type="tel" class="text-mid" v-model="decay"><input type="range" min="0.0" max="2.0" step="0.01" v-model="decay">
-				<span>Sustain</span><input type="tel" class="text-mid" v-model="sustain"><input type="range" min="0.0" max="1.0" step="0.01" v-model="sustain">
-				<span>Release</span><input type="tel" class="text-mid" v-model="release"><input type="range" min="0.01" max="2.0" step="0.01" v-model="release">
+				<span>Decay</span><input type="tel" class="text-mid"
+					v-on:blur="function(){decay=clampInput(decay,0.01,60.0,0.5)}" v-model="decay"><input type="range"
+					min="0.01" max="2.0" step="0.01" v-model="decay">
+				<span>Sustain</span><input type="tel" class="text-mid"
+					v-on:blur="function(){sustain=clampInput(sustain,0,1.0,0.5)}" v-model="sustain"><input type="range"
+					min="0.0" max="1.0" step="0.01" v-model="sustain">
+				<span>Release</span><input type="tel" class="text-mid"
+					v-on:blur="function(){release=clampInput(release,0.01,60.0,0.5)}" v-model="release"><input
+					type="range" min="0.01" max="2.0" step="0.01" v-model="release">
 			</main>
 			<ul class="set">
 				<li class="white c" v-on:mousedown="keyPlay(60)" v-on:mouseup="keyStop()"></li>
@@ -145,8 +193,8 @@
 				<li class="black as" v-on:mousedown="keyPlay(70)" v-on:mouseup="keyStop()"></li>
 				<li class="white b" v-on:mousedown="keyPlay(71)" v-on:mouseup="keyStop()"></li>
 			</ul>
-			<span>{{$data}}</span>
 		</div>
+		<pre>{{$data}}</pre>
 	</div>
 	<script src="https://cdn.jsdelivr.net/npm/vue@2.5.13/dist/vue.js">
 	</script>

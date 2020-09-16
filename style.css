@@ -73,8 +73,12 @@ ul {
 	width: 700px;
 }
 
-.range-small{
+input.range-small{
 	width: 70px;
+}
+
+input.range-large{
+	width: 240px;
 }
 
 .synth{

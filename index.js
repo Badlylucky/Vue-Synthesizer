@@ -111,6 +111,7 @@ var app = new Vue({
 		mainLFO: [],
 		mainLFOWave: "sine",
 		mainLFORate: 5,
+		mainLFOSync: false,
 		mainLFOApply: [],
 		mainLFOGain: [],
 		mainLFODepth: 10,
@@ -118,6 +119,7 @@ var app = new Vue({
 		subLFO: [],
 		subLFOWave: "sine",
 		subLFORate: 5,
+		subLFOSync: false,
 		subLFOApply: [],
 		subLFOGain: [],
 		subLFODepth: 10,
@@ -129,7 +131,7 @@ var app = new Vue({
 		sustain: 0.5,
 		release: 0.5,
 		//Others
-		masterVolume:[],
+		masterVolume: [],
 		nowplaying: false,
 		note: 72
 	},
@@ -137,22 +139,22 @@ var app = new Vue({
 		keyPlay: function (note) {
 			this.note = note;
 			this.mainOscVolume.gain.value = this.mainGain / 1000;
-			this.subOscVolume.gain.value=this.subGain/1000;
-			this.mainosc.type=this.mainWave;
-			this.mainosc.frequency.value=calcFrequency(note+(this.mainOctave-4)*12);
-			this.mainosc.detune.value=this.mainDetune;
-			this.subosc.type=this.subWave;
-			this.subosc.frequency.value=calcFrequency(note+(this.subOctave-4)*12);
-			this.subosc.detune.value=this.subDetune;
-			this.LPF.frequency.value=this.LPFCutoff;
-			this.LPF.Q.value=this.LPFEmphasis;
-			this.HPF.frequency.value=this.HPFCutoff;
-			this.HPF.Q.value=this.HPFEmphasis;
-			this.Envelope.attack.value=this.attack;
-			this.Envelope.attackcurve.value=this.attackCurve;
-			this.Envelope.decay.value=this.decay;
-			this.Envelope.sustain.value=this.sustain;
-			this.Envelope.release.value=this.release;
+			this.subOscVolume.gain.value = this.subGain / 1000;
+			this.mainosc.type = this.mainWave;
+			this.mainosc.frequency.value = calcFrequency(note + (this.mainOctave - 4) * 12);
+			this.mainosc.detune.value = this.mainDetune;
+			this.subosc.type = this.subWave;
+			this.subosc.frequency.value = calcFrequency(note + (this.subOctave - 4) * 12);
+			this.subosc.detune.value = this.subDetune;
+			this.LPF.frequency.value = this.LPFCutoff;
+			this.LPF.Q.value = this.LPFEmphasis;
+			this.HPF.frequency.value = this.HPFCutoff;
+			this.HPF.Q.value = this.HPFEmphasis;
+			this.Envelope.attack.value = this.attack;
+			this.Envelope.attackcurve.value = this.attackCurve;
+			this.Envelope.decay.value = this.decay;
+			this.Envelope.sustain.value = this.sustain;
+			this.Envelope.release.value = this.release;
 			this.setLFO();
 			if (!this.nowplaying) {
 				this.mainosc.start(0);
@@ -161,22 +163,30 @@ var app = new Vue({
 				this.subLFO.start(0);
 				this.nowplaying = true;
 			}
-			this.Envelope.trigger.value=1;
+			this.Envelope.trigger.value = 1;
 		},
-		keyStop:function(){
+		keyStop: function () {
 			this.Envelope.trigger.value = 0;
 		},
 		//LFOに値を設定して接続する
-		setLFO:function(){
+		setLFO: function () {
 			this.mainLFOGain.disconnect();
 			this.subLFOGain.disconnect();
-			this.mainLFO.frequency.value=this.mainLFORate;
-			this.mainLFOGain.gain.value=this.mainLFODepth;
-			this.subLFO.frequency.value=this.subLFORate;
-			this.subLFOGain.gain.value=this.subLFODepth;
+			if (this.mainLFOSync) {
+				this.mainLFO.frequency.value = calcFrequency(this.note + (this.mainOctave - 4) * 12) * this.mainLFORate;
+			} else {
+				this.mainLFO.frequency.value = this.mainLFORate;
+			}
+			this.mainLFOGain.gain.value = this.mainLFODepth;
+			if (this.subLFOSync) {
+				this.subLFO.frequency.value = calcFrequency(this.note + (this.mainOctave - 4) * 12) * this.subLFORate;
+			} else {
+				this.subLFO.frequency.value = this.subLFORate;
+			}
+			this.subLFOGain.gain.value = this.subLFODepth;
 			//main
-			for(const i in this.mainLFOApply){
-				switch(this.mainLFOApply[i]){
+			for (const i in this.mainLFOApply) {
+				switch (this.mainLFOApply[i]) {
 					case "mainOscFreq":
 						this.mainLFOGain.connect(this.mainosc.frequency); break;
 					case "mainOscVol":
@@ -193,15 +203,21 @@ var app = new Vue({
 						this.mainLFOGain.connect(this.HPF.frequency); break;
 					case "HPFEmphasis":
 						this.mainLFOGain.connect(this.HPF.Q); break;
-					case "masterVol":
-						this.mainLFOGain.connect(this.masterVolume.gain); break;
+					case "mainLFORate":
+						this.mainLFOGain.connect(this.mainLFO.frequency); break;
+					case "mainLFODepth":
+						this.mainLFOGain.connect(this.mainLFOGain.gain); break;
+					case "subLFORate":
+						this.mainLFOGain.connect(this.subLFO.frequency); break;
+					case "subLFODepth":
+						this.mainLFOGain.connect(this.subLFOGain.gain); break;
 					default:
-						console.log("error! not any match"); break;
+						console.log("error! not any match " + this.mainLFOApply[i]); break;
 				}
 			}
 			//sub
-			for(const i in this.subLFOApply){
-				switch(this.subLFOApply[i]){
+			for (const i in this.subLFOApply) {
+				switch (this.subLFOApply[i]) {
 					case "mainOscFreq":
 						this.subLFOGain.connect(this.mainosc.frequency); break;
 					case "mainOscVol":
@@ -218,14 +234,31 @@ var app = new Vue({
 						this.subLFOGain.connect(this.HPF.frequency); break;
 					case "HPFEmphasis":
 						this.subLFOGain.connect(this.HPF.Q); break;
-					case "masterVol":
-						this.subLFOGain.connect(this.masterVolume.gain); break;
 					case "mainLFORate":
 						this.subLFOGain.connect(this.mainLFO.frequency); break;
 					case "mainLFODepth":
 						this.subLFOGain.connect(this.mainLFOGain.gain); break;
+					case "subLFORate":
+						this.subLFOGain.connect(this.subLFO.frequency); break;
+					case "subLFODepth":
+						this.subLFOGain.connect(this.subLFOGain.gain); break;
 				}
 			}
+		},
+		//textboxに入力された値を補正する
+		clampInput: function (value, min, max, defVal) {
+			let ret;
+			var regexp = new RegExp(/^[+,-]?([1-9]\d*|0)(\.\d+)?$/);
+			if (!regexp.test(value)) {
+				ret = defVal;
+			} else if (value < min) {
+				ret = min;
+			} else if (value > max) {
+				ret = max;
+			} else {
+				ret = value;
+			}
+			return ret;
 		}
 	},
 	created: async function () {
@@ -242,8 +275,8 @@ var app = new Vue({
 		this.mainOscVolume = this.audioContext.createGain();
 		this.LPF = this.audioContext.createBiquadFilter();
 		this.HPF = this.audioContext.createBiquadFilter();
-		this.LPF.type="lowpass";
-		this.HPF.type="highpass";
+		this.LPF.type = "lowpass";
+		this.HPF.type = "highpass";
 		this.Envelope = new AdsrNode(this.audioContext);
 		this.masterVolume = this.audioContext.createGain();
 		this.masterVolume.gain.value = 0;
