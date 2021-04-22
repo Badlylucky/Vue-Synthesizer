@@ -196,7 +196,7 @@ Vue.component('vue-synthesizer', {
 				min="0.0" max="1.0" step="0.01" v-model="sustain">
 			<span>Release</span><input type="tel" class="text-mid"
 				v-on:blur="function(){release=clampInput(release,0.01,60.0,0.5)}" v-model="release"><input
-				type="range" min="0.01" max="2.0" step="0.01" v-model="release">
+				type="range" min="0.01" max="1.0" step="0.01" v-model="release">
 		</main>
 		<ul class="set">
 			<li class="white c" v-on:mousedown="keyPlay(60)" v-on:mouseup="keyStop()"></li>
